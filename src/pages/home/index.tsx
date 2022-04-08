@@ -19,4 +19,4 @@ const AuthPage: VFC<WithPageAuthRequiredProps> & { layout?: typeof MainLayout } 
   withPageAuthRequired(Page)
 AuthPage.layout = MainLayout
 
-export default Page
+export default AuthPage

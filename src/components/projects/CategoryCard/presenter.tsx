@@ -12,7 +12,7 @@ type Props = {
 
 export const SkeletonPresenter: VFC = () => {
   return (
-    <Card elevation={2}>
+    <Card elevation={0}>
       <CardContent>
         <Skeleton variant='text' />
         <Skeleton variant='text' />

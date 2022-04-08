@@ -6,7 +6,9 @@ import { AxiosResponse } from 'axios'
 export const useCategorySwr = () => {
   const fetcher: Fetcher<Category[]> = (url: string) =>
     httpClient.get(url).then((res: AxiosResponse<Category[]>) => res.data)
-  const { data, error } = useSWR<Category[], Error>('/api/categories', fetcher)
+  const { data, error } = useSWR<Category[], Error>('/api/categories', fetcher, {
+    revalidateOnFocus: false,
+  })
 
   return {
     categories: data,

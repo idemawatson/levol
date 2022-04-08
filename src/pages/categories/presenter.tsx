@@ -1,7 +1,9 @@
-import { Container, Grid } from '@mui/material'
+import { Button, Container, Grid, Paper, Slide } from '@mui/material'
 import { CategoryCard, SkeletonCategoryCard } from '@/components/projects/CategoryCard'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { Category } from '.prisma/client'
+import { AdditionBtn } from '@/components/uiParts/AdditionBtn'
+import { grey } from '@mui/material/colors'
 
 type Props = {
   categories: Category[] | undefined
@@ -17,6 +19,12 @@ const CardWrapper: React.VFC<{ children: ReactNode }> = ({ children }) => {
 }
 
 const Presenter: React.VFC<Props> = ({ categories, handleClickCategoryCard }) => {
+  const [adding, setAdding] = useState(false)
+
+  const handleClickAdditionBtn = () => {
+    setAdding(!adding)
+  }
+
   const categoryCards = categories
     ? categories.map((category) => (
         <CardWrapper key={category.id}>
@@ -33,11 +41,25 @@ const Presenter: React.VFC<Props> = ({ categories, handleClickCategoryCard }) =>
         </CardWrapper>
       ))
   return (
-    <Container component='div' sx={{ py: 2 }}>
-      <Grid container spacing={2}>
-        {categoryCards}
-      </Grid>
-    </Container>
+    <>
+      {adding ? (
+        <Slide direction='up' in={true} mountOnEnter unmountOnExit>
+          <Paper sx={{ height: '90vh' }} elevation={0}>
+            追加！
+            <Button onClick={handleClickAdditionBtn}>閉じる</Button>
+          </Paper>
+        </Slide>
+      ) : (
+        <Container component='div' sx={{ pa: 2, py: 2, overflow: 'hidden' }}>
+          <Grid container spacing={2}>
+            {categoryCards}
+            <CardWrapper>
+              <AdditionBtn onClick={handleClickAdditionBtn} />
+            </CardWrapper>
+          </Grid>
+        </Container>
+      )}
+    </>
   )
 }
 
