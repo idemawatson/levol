@@ -10,6 +10,7 @@ const Page: VFC = () => {
     <>
       <p>Welcome {user?.given_name}!</p>
       <p>name: {user?.nickname}!</p>
+      <p>name: Hello,World</p>
       {/* <Presenter user={user} /> */}
     </>
   )
