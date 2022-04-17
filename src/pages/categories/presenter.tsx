@@ -3,11 +3,12 @@ import { CategoryCard, SkeletonCategoryCard } from '@/components/projects/Catego
 import { ReactNode, useState } from 'react'
 import { Category } from '.prisma/client'
 import { AdditionBtn } from '@/components/uiParts/AdditionBtn'
-import { grey } from '@mui/material/colors'
+import { CategoryCreateForm } from '@/components/projects/CategoryCreateForm'
 
 type Props = {
   categories: Category[] | undefined
   handleClickCategoryCard: (category: Category) => void
+  handleCreate: () => void
 }
 
 const CardWrapper: React.VFC<{ children: ReactNode }> = ({ children }) => {
@@ -18,7 +19,7 @@ const CardWrapper: React.VFC<{ children: ReactNode }> = ({ children }) => {
   )
 }
 
-const Presenter: React.VFC<Props> = ({ categories, handleClickCategoryCard }) => {
+const Presenter: React.VFC<Props> = ({ categories, handleClickCategoryCard, handleCreate }) => {
   const [adding, setAdding] = useState(false)
 
   const handleClickAdditionBtn = () => {
@@ -45,8 +46,13 @@ const Presenter: React.VFC<Props> = ({ categories, handleClickCategoryCard }) =>
       {adding ? (
         <Slide direction='up' in={true} mountOnEnter unmountOnExit>
           <Paper sx={{ height: '90vh' }} elevation={0}>
-            追加！
             <Button onClick={handleClickAdditionBtn}>閉じる</Button>
+            <CategoryCreateForm
+              handleCreate={() => {
+                handleCreate()
+                setAdding(!adding)
+              }}
+            />
           </Paper>
         </Slide>
       ) : (
