@@ -1,7 +1,7 @@
 import { VFC } from 'react'
 import { Button, Container, MenuItem, Select, Stack, TextField } from '@mui/material'
 import React from 'react'
-import { useCategory } from '@/hooks/useCategory'
+import { useCategory } from '@/hooks/category/useCategory'
 import { levelType } from '@prisma/client'
 
 type Props = {

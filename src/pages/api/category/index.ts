@@ -20,11 +20,11 @@ const postHandler: NextApiHandler = async (req: NextApiRequest, res: NextApiResp
         level: 1,
         exp: 0,
         levelType: body.levelType,
-        user: user.sub,
+        userId: user.sub,
       },
     })
     .finally(async () => await prisma.$disconnect())
-  res.status(200).json('happy')
+  res.status(200).json(result)
 }
 
 export default withApiAuthRequired(async (req: NextApiRequest, res: NextApiResponse) => {
