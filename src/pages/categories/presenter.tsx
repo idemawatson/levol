@@ -8,7 +8,7 @@ import { CategoryCreateForm } from '@/components/projects/CategoryCreateForm'
 type Props = {
   categories: Category[] | undefined
   handleClickCategoryCard: (category: Category) => void
-  handleCreate: () => void
+  handleCreate: (callback: () => void) => void
 }
 
 const CardWrapper: React.VFC<{ children: ReactNode }> = ({ children }) => {
@@ -23,6 +23,10 @@ const Presenter: React.VFC<Props> = ({ categories, handleClickCategoryCard, hand
   const [adding, setAdding] = useState(false)
 
   const handleClickAdditionBtn = () => {
+    setAdding(!adding)
+  }
+
+  const afterCreated = () => {
     setAdding(!adding)
   }
 
@@ -47,12 +51,7 @@ const Presenter: React.VFC<Props> = ({ categories, handleClickCategoryCard, hand
         <Slide direction='up' in={true} mountOnEnter unmountOnExit>
           <Paper sx={{ height: '90vh' }} elevation={0}>
             <Button onClick={handleClickAdditionBtn}>閉じる</Button>
-            <CategoryCreateForm
-              handleCreate={() => {
-                handleCreate()
-                setAdding(!adding)
-              }}
-            />
+            <CategoryCreateForm handleCreate={() => handleCreate(afterCreated)} />
           </Paper>
         </Slide>
       ) : (
