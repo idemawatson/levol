@@ -8,13 +8,13 @@ import { AxiosResponse } from 'axios'
 export const useCategory = () => {
   const [form, setForm] = useCategoryFormSWR('form', { name: '', levelType: levelType.normal })
 
-  const handleCreate = async () => {
+  const handleCreateCategory = async () => {
     console.log(form)
     const res = await httpClient.post('/api/category', form)
     return res.data
   }
 
-  const handleList = () => {
+  const handleListCategory = () => {
     const fetcher: Fetcher<Category[]> = (url: string) =>
       httpClient.get(url).then((res: AxiosResponse<Category[]>) => res.data)
     const { data, error, mutate } = useSWR<Category[], Error>('/api/categories', fetcher, {
@@ -31,7 +31,7 @@ export const useCategory = () => {
   return {
     form,
     setForm,
-    handleCreate,
-    handleList,
+    handleCreateCategory,
+    handleListCategory,
   }
 }
