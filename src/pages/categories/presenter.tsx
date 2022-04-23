@@ -4,11 +4,13 @@ import { ReactNode, useState } from 'react'
 import { Category } from '.prisma/client'
 import { AdditionBtn } from '@/components/uiParts/AdditionBtn'
 import { CategoryCreateForm } from '@/components/projects/CategoryCreateForm'
+import { CategoryCreateInput } from '@/hooks/category/useCategory'
+import { useCreatingSWR } from '@/hooks/category/useCreatingSWR'
 
 type Props = {
   categories: Category[] | undefined
   handleClickCategoryCard: (category: Category) => void
-  handleCreate: (callback: () => void) => void
+  handleCreate: (input: CategoryCreateInput) => void
 }
 
 const CardWrapper: React.VFC<{ children: ReactNode }> = ({ children }) => {
@@ -20,14 +22,10 @@ const CardWrapper: React.VFC<{ children: ReactNode }> = ({ children }) => {
 }
 
 const Presenter: React.VFC<Props> = ({ categories, handleClickCategoryCard, handleCreate }) => {
-  const [adding, setAdding] = useState(false)
+  const [creating, setCreating] = useCreatingSWR()
 
   const handleClickAdditionBtn = () => {
-    setAdding(!adding)
-  }
-
-  const afterCreated = () => {
-    setAdding(!adding)
+    setCreating(!creating)
   }
 
   const categoryCards = categories
@@ -47,11 +45,11 @@ const Presenter: React.VFC<Props> = ({ categories, handleClickCategoryCard, hand
       ))
   return (
     <>
-      {adding ? (
+      {creating ? (
         <Slide direction='up' in={true} mountOnEnter unmountOnExit>
           <Paper sx={{ height: '90vh' }} elevation={0}>
             <Button onClick={handleClickAdditionBtn}>閉じる</Button>
-            <CategoryCreateForm handleCreate={() => handleCreate(afterCreated)} />
+            <CategoryCreateForm handleCreate={handleCreate} />
           </Paper>
         </Slide>
       ) : (

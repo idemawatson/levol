@@ -1,26 +1,21 @@
 import { VFC } from 'react'
 import { Button, Container, MenuItem, Select, Stack, TextField } from '@mui/material'
 import React from 'react'
-import { useCategory } from '@/hooks/category/useCategory'
+import { CategoryCreateInput, useCategory } from '@/hooks/category/useCategory'
+import { RhfTextField } from '@/components/uiParts/TextField'
 import { levelType } from '@prisma/client'
 
 type Props = {
-  handleCreate: () => void
+  handleCreate: (input: CategoryCreateInput) => void
 }
 
 const Presenter: VFC<Props> = ({ handleCreate }) => {
-  const { form, setForm } = useCategory()
-
+  const { control, handleSubmit } = useCategory()
   return (
     <Container>
       <Stack spacing={3}>
-        <TextField
-          required
-          label='カテゴリ名'
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
-        <Select
+        <RhfTextField placeholder='カテゴリ名' name={'name'} control={control} />
+        {/* <Select
           required
           label='レベルタイプ'
           value={form.levelType}
@@ -29,8 +24,13 @@ const Presenter: VFC<Props> = ({ handleCreate }) => {
           <MenuItem value={'easy'}>Easy</MenuItem>
           <MenuItem value={'normal'}>Normal</MenuItem>
           <MenuItem value={'hard'}>Hard</MenuItem>
-        </Select>
-        <Button color='primary' variant='contained' size='large' onClick={handleCreate}>
+        </Select> */}
+        <Button
+          color='primary'
+          variant='contained'
+          size='large'
+          onClick={handleSubmit(handleCreate)}
+        >
           作成
         </Button>
       </Stack>

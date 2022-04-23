@@ -10,8 +10,11 @@ const postHandler: NextApiHandler = async (req: NextApiRequest, res: NextApiResp
     res.status(401).json({ message: 'auth required.' })
     return
   }
-  console.log(user)
+  console.log(req.body)
   const body = req.body
+  if (!req.body.name || !req.body.levelType) {
+    throw new Error('param is invalid.')
+  }
   const result = await prisma.category
     .create({
       data: {
@@ -28,10 +31,18 @@ const postHandler: NextApiHandler = async (req: NextApiRequest, res: NextApiResp
 }
 
 export default withApiAuthRequired(async (req: NextApiRequest, res: NextApiResponse) => {
-  switch (req.method) {
-    case 'POST':
-      return postHandler(req, res)
-    default:
+  try {
+    if (req.method == 'POST') {
+      return await postHandler(req, res)
+    } else {
       res.status(405).json({ err: 'Method Not Allowed' })
+    }
+  } catch (e) {
+    if (e instanceof Error) {
+      console.error(e)
+      res.status(400).json({ err: e.message })
+    } else {
+      res.status(500).json({ err: 'unknown error.' })
+    }
   }
 })

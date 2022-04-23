@@ -1,16 +1,37 @@
-import { useCategoryFormSWR } from '@/hooks/category/useCategoryFormSWR'
+// import { useCategoryFormSWR } from '@/hooks/category/useCategoryFormSWR'
 import { levelType } from '@prisma/client'
 import useSWR, { Fetcher } from 'swr'
 import { Category } from '.prisma/client'
 import { httpClient } from '@/utils/httpClient'
 import { AxiosResponse } from 'axios'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+export type CategoryCreateInput = {
+  name: string
+  levelType: levelType
+}
+
+const validationSchema = yup.object().shape({
+  name: yup.string().required().max(10),
+  levelType: yup.string().required(),
+})
 
 export const useCategory = () => {
-  const [form, setForm] = useCategoryFormSWR('form', { name: '', levelType: levelType.normal })
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CategoryCreateInput>({
+    mode: 'onChange',
+    resolver: yupResolver(validationSchema),
+    defaultValues: { name: '', levelType: levelType.normal },
+  })
 
-  const handleCreateCategory = async () => {
-    console.log(form)
-    const res = await httpClient.post('/api/category', form)
+  const handleCreateCategory = async (input: CategoryCreateInput) => {
+    console.log(input)
+    const res = await httpClient.post('/api/category', input)
     return res.data
   }
 
@@ -29,8 +50,9 @@ export const useCategory = () => {
   }
 
   return {
-    form,
-    setForm,
+    control,
+    handleSubmit,
+    formState: { errors },
     handleCreateCategory,
     handleListCategory,
   }
