@@ -1,36 +1,37 @@
 import { VFC } from 'react'
-import { Button, Container, MenuItem, Select, Stack, TextField } from '@mui/material'
+import { Button, Container, MenuItem, Stack } from '@mui/material'
 import React from 'react'
-import { useCategory } from '@/hooks/category/useCategory'
+import { CategoryCreateInput, useCategory } from '@/hooks/category/useCategory'
+import { RhfTextField } from '@/components/uiParts/TextField'
+import { RhfSelectField } from '@/components/uiParts/SelectField'
 import { levelType } from '@prisma/client'
 
 type Props = {
-  handleCreate: () => void
+  handleCreate: (form: CategoryCreateInput) => void
 }
 
 const Presenter: VFC<Props> = ({ handleCreate }) => {
-  const { form, setForm } = useCategory()
-
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useCategory()
   return (
-    <Container>
+    <Container sx={{ marginTop: '16px' }}>
       <Stack spacing={3}>
-        <TextField
-          required
-          label='カテゴリ名'
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
-        <Select
-          required
-          label='レベルタイプ'
-          value={form.levelType}
-          onChange={(e) => setForm({ ...form, levelType: e.target.value as levelType })}
+        <RhfTextField label='カテゴリ名' name={'name'} control={control} />
+        <RhfSelectField label='レベルタイプ' name={'levelType'} control={control}>
+          <MenuItem value={levelType.easy}>Easy</MenuItem>
+          <MenuItem value={levelType.normal}>Normal</MenuItem>
+          <MenuItem value={levelType.hard}>Hard</MenuItem>
+        </RhfSelectField>
+        <Button
+          color='primary'
+          variant='contained'
+          size='large'
+          onClick={handleSubmit(handleCreate)}
+          disabled={!isValid}
         >
-          <MenuItem value={'easy'}>Easy</MenuItem>
-          <MenuItem value={'normal'}>Normal</MenuItem>
-          <MenuItem value={'hard'}>Hard</MenuItem>
-        </Select>
-        <Button color='primary' variant='contained' size='large' onClick={handleCreate}>
           作成
         </Button>
       </Stack>
