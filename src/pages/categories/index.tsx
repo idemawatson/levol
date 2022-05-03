@@ -2,22 +2,24 @@ import { useState, VFC } from 'react'
 import { MainLayout } from '@/components/layout/MainLayout'
 import Presenter from '@/pages/categories/presenter'
 import { Category } from '.prisma/client'
-import { useCategory } from '@/hooks/category/useCategory'
+import { CategoryCreateInput, useCategory } from '@/hooks/category/useCategory'
 import { withPageAuthRequired, WithPageAuthRequiredProps } from '@auth0/nextjs-auth0'
 import { TheLoading } from '@/components/uiParts/TheLoading'
+import { useCreatingSWR } from '@/hooks/category/useUIHooks'
 
 const Page: VFC = () => {
   const { handleCreateCategory, handleListCategory } = useCategory()
   const { categories, mutate } = handleListCategory()
   const [loading, setLoading] = useState(false)
+  const [_, setCreating] = useCreatingSWR()
   const handleClickCategoryCard = (category: Category) => console.log(category)
 
-  const create = async (callback: () => void) => {
+  const create = async (form: CategoryCreateInput) => {
     try {
       setLoading(true)
-      await handleCreateCategory()
+      await handleCreateCategory(form)
       await mutate()
-      callback()
+      setCreating(false)
     } catch (e) {
       console.error(e)
     } finally {

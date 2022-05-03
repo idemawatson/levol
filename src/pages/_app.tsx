@@ -4,6 +4,7 @@ import { UserProvider } from '@auth0/nextjs-auth0'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { ReactNode } from 'react'
 import { CssBaseline } from '@mui/material'
+import '@/components/projects/CategoryCreateForm/style.css'
 
 type NextPageWithLayout = NextPage & {
   layout?: typeof MainLayout
