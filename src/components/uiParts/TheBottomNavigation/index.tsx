@@ -1,12 +1,12 @@
 import Presenter from '@/components/uiParts/TheBottomNavigation/presenter'
-import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 export const TheBottomNavigation: React.VFC = () => {
-  const [value, setValue] = useState('recents')
-
+  const router = useRouter()
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue)
+    event.preventDefault()
+    router.push(`/${newValue}`)
   }
 
-  return <Presenter value={value} handleChange={handleChange} />
+  return <Presenter value={router.route} handleChange={handleChange} />
 }

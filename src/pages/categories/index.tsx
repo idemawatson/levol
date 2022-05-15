@@ -6,13 +6,18 @@ import { CategoryCreateInput, useCategory } from '@/hooks/category/useCategory'
 import { withPageAuthRequired, WithPageAuthRequiredProps } from '@auth0/nextjs-auth0'
 import { TheLoading } from '@/components/uiParts/TheLoading'
 import { useCreatingSWR } from '@/hooks/category/useUIHooks'
+import { useRouter } from 'next/router'
 
 const Page: VFC = () => {
   const { handleCreateCategory, handleListCategory } = useCategory()
   const { categories, mutate } = handleListCategory()
   const [loading, setLoading] = useState(false)
   const [_, setCreating] = useCreatingSWR()
-  const handleClickCategoryCard = (category: Category) => console.log(category)
+  const router = useRouter()
+
+  const handleClickCategoryCard = (category: Category) => {
+    router.push(`categories/${category.id}`)
+  }
 
   const create = async (form: CategoryCreateInput) => {
     try {
