@@ -2,10 +2,11 @@ import { levelType } from '@prisma/client'
 import useSWR, { Fetcher } from 'swr'
 import { Category } from '.prisma/client'
 import { httpClient } from '@/utils/httpClient'
-import { AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { APIError } from '@/errors/APIError'
 
 export type CategoryCreateInput = {
   name: string
@@ -44,11 +45,40 @@ export const useCategory = () => {
     }
   }
 
+  const handleGetCategory = (categoryId: string) => {
+    const fetcher: Fetcher<Category> = async (url: string) => {
+      try {
+        const res = await httpClient.get(url)
+        return res.data
+      } catch (e) {
+        if (axios.isAxiosError(e) && e.response) {
+          const error = new APIError('An error occurred while fetching the data.')
+          error.info = e.response.data
+          throw error
+        }
+      }
+    }
+    const { data, error, mutate } = useSWR<Category, Error>(
+      `/api/category/${categoryId}`,
+      fetcher,
+      {
+        revalidateOnFocus: false,
+      },
+    )
+
+    return {
+      category: data,
+      error,
+      mutate,
+    }
+  }
+
   return {
     control,
     handleSubmit,
     formState,
     handleCreateCategory,
     handleListCategory,
+    handleGetCategory,
   }
 }
